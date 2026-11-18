@@ -1,84 +1,81 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { blogAPI } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 const BlogView = () => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchBlog();
-  }, [id]);
-
-  const fetchBlog = async () => {
+  const fetchBlog = useCallback(async () => {
+    setLoading(true);
+    setError('');
     try {
       const response = await blogAPI.getBlog(id);
       setBlog(response.data);
-    } catch (error) {
-      console.error('Error fetching blog:', error);
-      navigate('/');
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || 'This story could not be loaded.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchBlog();
+  }, [fetchBlog]);
 
   const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this blog?')) {
-      try {
-        await blogAPI.deleteBlog(id);
-        navigate('/');
-      } catch (error) {
-        alert('Error deleting blog');
-      }
+    if (!window.confirm('Delete this story? This action cannot be undone.')) return;
+    try {
+      await blogAPI.deleteBlog(id);
+      navigate('/');
+    } catch (requestError) {
+      window.alert(requestError.response?.data?.error || 'Could not delete this story.');
     }
   };
 
-  if (loading) return <div className="loading">Loading blog...</div>;
-  if (!blog) return <div>Blog not found</div>;
+  if (loading) return <div className="loading" role="status">Loading story…</div>;
+  if (error || !blog) {
+    return <div className="feed-state feed-error" role="alert"><strong>Story unavailable</strong><p>{error || 'This story may have been removed.'}</p><Link className="button button-dark" to="/">Back to Discover</Link></div>;
+  }
 
-  const isAuthor = user && blog.author._id === user.id;
+  const authorId = blog.author?._id || blog.author?.id;
+  const isAuthor = user && authorId === user.id;
+  const publishedDate = blog.createdAt
+    ? new Date(blog.createdAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })
+    : '';
 
   return (
     <div className="blog-view">
       <article className="blog-article">
         <header className="blog-header">
+          <span className="eyebrow"><span className="eyebrow-dot" /> FROM THE BLOGHUB COMMUNITY</span>
           <h1>{blog.title}</h1>
           <div className="blog-meta">
-            <span>By: <strong>{blog.author.name}</strong></span>
-            <span>Published: {new Date(blog.createdAt).toLocaleDateString()}</span>
-            {blog.updatedAt !== blog.createdAt && (
-              <span>Updated: {new Date(blog.updatedAt).toLocaleDateString()}</span>
+            <span>By <strong>{blog.author?.name || 'BlogHub writer'}</strong></span>
+            {publishedDate && <span>Published {publishedDate}</span>}
+            {blog.updatedAt && blog.createdAt && new Date(blog.updatedAt).getTime() > new Date(blog.createdAt).getTime() + 1000 && (
+              <span>Updated {new Date(blog.updatedAt).toLocaleDateString()}</span>
             )}
           </div>
         </header>
-        
         <div className="blog-content">
-          {blog.content.split('\n').map((paragraph, index) => (
+          {String(blog.content || '').split(/\n{2,}/).map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
         </div>
-
         {isAuthor && (
           <div className="blog-actions">
-            <Link to={`/edit/${blog._id}`} className="btn btn-secondary">
-              Edit Blog
-            </Link>
-            <button onClick={handleDelete} className="btn btn-danger">
-              Delete Blog
-            </button>
+            <Link to={`/edit/${blog._id}`} className="button btn-secondary">Edit story</Link>
+            <button type="button" onClick={handleDelete} className="button btn-danger">Delete story</button>
           </div>
         )}
       </article>
-      
-      <div className="blog-navigation">
-        <Link to="/" className="btn btn-primary">
-          ← Back to All Blogs
-        </Link>
-      </div>
+      <div className="blog-navigation"><Link to="/" className="button button-outline">← Back to Discover</Link></div>
     </div>
   );
 };

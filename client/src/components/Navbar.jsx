@@ -1,41 +1,45 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/useAuth';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
+    setMenuOpen(false);
     navigate('/');
   };
 
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <nav className="navbar">
-      <div className="nav-container">
-        <Link to="/" className="nav-logo">
-          BlogHub
-        </Link>
-        <div className="nav-menu">
-          <Link to="/" className="nav-link">Home</Link>
-          {user ? (
+    <header className="site-header">
+      <nav className="navbar" aria-label="Main navigation">
+        <Link to="/" className="nav-logo" onClick={closeMenu} aria-label="BlogHub home">bloghub<span>.</span></Link>
+        <button className="mobile-menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen((open) => !open)}>
+          <span>{menuOpen ? 'Close' : 'Menu'}</span><span aria-hidden="true">{menuOpen ? '×' : '☰'}</span>
+        </button>
+        <div className={`nav-menu ${menuOpen ? 'nav-menu-open' : ''}`} id="primary-navigation">
+          <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`} onClick={closeMenu}>Discover</NavLink>
+          {user && <NavLink to="/profile" className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`} onClick={closeMenu}>My stories</NavLink>}
+          <span className="nav-divider" />
+          {!loading && (user ? (
             <>
-              <Link to="/create" className="nav-link">Create Blog</Link>
-              <Link to="/profile" className="nav-link">Profile</Link>
-              <button onClick={handleLogout} className="nav-link btn-logout">
-                Logout
-              </button>
+              <Link to="/create" className="nav-write-button" onClick={closeMenu}>Write a story <span aria-hidden="true">↗</span></Link>
+              <button type="button" onClick={handleLogout} className="nav-account-button">Sign out</button>
             </>
           ) : (
             <>
-              <Link to="/login" className="nav-link">Login</Link>
-              <Link to="/register" className="nav-link">Register</Link>
+              <Link to="/login" className="nav-link" onClick={closeMenu}>Sign in</Link>
+              <Link to="/register" className="nav-write-button" onClick={closeMenu}>Join BlogHub <span aria-hidden="true">↗</span></Link>
             </>
-          )}
+          ))}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 };
 

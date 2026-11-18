@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { userAPI, blogAPI } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 const Profile = () => {
   const [userBlogs, setUserBlogs] = useState([]);
@@ -18,8 +18,8 @@ const Profile = () => {
     try {
       const response = await userAPI.getProfile();
       setUserBlogs(response.data.blogs);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
+    } catch {
+      setUserBlogs([]);
     } finally {
       setLoading(false);
     }
@@ -29,8 +29,8 @@ const Profile = () => {
     if (window.confirm('Are you sure you want to delete this blog?')) {
       try {
         await blogAPI.deleteBlog(blogId);
-        setUserBlogs(userBlogs.filter(blog => blog._id !== blogId));
-      } catch (error) {
+        setUserBlogs((currentBlogs) => currentBlogs.filter((blog) => blog._id !== blogId));
+      } catch {
         alert('Error deleting blog');
       }
     }
