@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import BlogCard from '../components/BlogCard';
 import { blogAPI } from '../services/api';
@@ -11,7 +11,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const fetchBlogs = async (nextPage = page, nextQuery = query) => {
+  const fetchBlogs = useCallback(async (nextPage, nextQuery) => {
     setLoading(true); setError('');
     try {
       const response = await blogAPI.getAllBlogs({ page: nextPage, limit: 12, search: nextQuery.trim() });
