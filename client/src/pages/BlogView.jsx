@@ -9,6 +9,7 @@ const BlogView = () => {
   const [commentText, setCommentText] = useState('');
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   const [engagementLoading, setEngagementLoading] = useState(false);
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,8 @@ const BlogView = () => {
     try {
       const response = await blogAPI.getBlog(id);
       setBlog(response.data);
-      setLiked((response.data.likes || []).some((like) => String(like) === String(user?.id || user?._id)));
+      setLikesCount(response.data.likesCount || 0);
+      setLiked(false);
     } catch (requestError) { setError(requestError.response?.data?.error || 'This story could not be loaded.'); }
     finally { setLoading(false); }
   }, [id, user]);
@@ -35,7 +37,11 @@ const BlogView = () => {
     finally { setCommentsLoading(false); }
   }, [id]);
 
-  useEffect(() => { fetchBlog(); fetchComments(); }, [fetchBlog, fetchComments]);
+  useEffect(() => {
+    fetchBlog(); fetchComments();
+    if (user) blogAPI.getBookmarks().then((response) => setBookmarked((response.data || []).some((story) => String(story._id) === String(id)))).catch(() => {});
+    else setBookmarked(false);
+  }, [fetchBlog, fetchComments, id, user]);
 
   const handleLike = async () => {
     if (!user) { navigate('/login'); return; }
@@ -43,7 +49,7 @@ const BlogView = () => {
     try {
       const response = await blogAPI.toggleLike(id);
       setLiked(response.data.liked);
-      setBlog((current) => ({ ...current, likes: Array(response.data.likesCount).fill(null) }));
+      setLikesCount(response.data.likesCount);
     } catch (requestError) { setDiscussionError(requestError.response?.data?.error || 'Could not update your like.'); }
     finally { setEngagementLoading(false); }
   };
@@ -87,7 +93,7 @@ const BlogView = () => {
   const isAuthor = user && String(authorId) === String(currentUserId);
   const canRemoveComment = (comment) => user && (String(comment.author?._id) === String(currentUserId) || isAuthor);
   const publishedDate = blog.publishedAt || blog.createdAt;
-  const likesCount = blog.likes?.length || 0;
+  
 
   return <div className="blog-view"><article className="blog-article">
     <header className="blog-header"><span className="eyebrow"><span className="eyebrow-dot" /> FROM THE BLOGHUB COMMUNITY</span><h1>{blog.title}</h1>
