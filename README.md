@@ -1,15 +1,15 @@
-# BlogHub — React Blogging Frontend
+# BlogHub — Editorial Publishing Frontend
 
-A React single-page application for BlogHub, with JWT-based authentication, blog management and user-profile screens. The app uses Vite for development and production builds.
+A React 19 + Vite frontend for BlogHub, a publishing platform in active evolution. The current application supports account registration/login, story discovery, reading, author-owned story CRUD and profile views. The editorial UI refresh is being developed on the `feature/bloghub-product-evolution` branch.
 
-## Features
+## Current experience
 
-- Register, login and logout flows
-- Browse and view blog posts
-- Create, edit and delete blog posts
-- Profile view and user-owned post management
-- Axios API client with bearer-token attachment
-- Responsive page and reusable component structure
+- Editorial landing page with story search across the currently loaded feed
+- Responsive navigation and mobile menu
+- Story cards with author/date metadata and author-only edit/delete actions
+- Article reading view
+- Registration, login, create/edit story and profile routes
+- Loading, empty and error states for the home feed
 
 ## Stack
 
@@ -18,36 +18,35 @@ A React single-page application for BlogHub, with JWT-based authentication, blog
 - React Router 7
 - Axios
 - Context API and React hooks
+- Custom responsive CSS design system
 
 ## Run locally
 
 ```bash
 git clone https://github.com/Nashid-k/bloghub-frontend.git
 cd bloghub-frontend/client
-npm install
+npm ci
 cp .env.example .env
 npm run dev
 ```
 
-Open the Vite URL printed in the terminal (normally [http://localhost:5173](http://localhost:5173)).
+Open the Vite URL printed in the terminal (normally http://localhost:5173). Start the companion API from [bloghub-backend](https://github.com/Nashid-k/bloghub-backend) separately.
 
 ## Environment
 
-`VITE_API_URL` is the backend origin without the `/api` suffix.
+`VITE_API_URL` is the backend origin without the `/api` suffix. It is public browser configuration; never place private credentials in `VITE_*` variables.
 
 ```env
 VITE_API_URL=http://localhost:5000
 ```
 
-Vite exposes `VITE_*` values to browser code. Never place private credentials in these variables.
-
 ## Scripts
 
 - `npm run dev` — start Vite
 - `npm run build` — create production build
-- `npm run preview` — preview the production build
+- `npm run preview` — preview production assets
 - `npm run lint` — run ESLint
 
-## Related repository
+## Product direction
 
-[BlogHub backend](https://github.com/Nashid-k/bloghub-backend)
+See [BlogHub 2.0 Product Roadmap](docs/PRODUCT_ROADMAP.md) for the planned reader, creator, engagement, moderation and production-hardening milestones. Planned capabilities are not represented as shipped features.
