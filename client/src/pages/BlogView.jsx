@@ -18,6 +18,7 @@ const BlogView = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const userId = user?.id || user?._id;
 
   const fetchBlog = useCallback(async () => {
     setLoading(true); setError('');
@@ -28,7 +29,7 @@ const BlogView = () => {
       setLiked(false);
     } catch (requestError) { setError(requestError.response?.data?.error || 'This story could not be loaded.'); }
     finally { setLoading(false); }
-  }, [id, user]);
+  }, [id]);
 
   const fetchComments = useCallback(async () => {
     setCommentsLoading(true);
@@ -41,7 +42,7 @@ const BlogView = () => {
     fetchBlog(); fetchComments();
     if (user) userAPI.getBookmarks().then((response) => setBookmarked((response.data || []).some((story) => String(story._id) === String(id)))).catch(() => {});
     else setBookmarked(false);
-  }, [fetchBlog, fetchComments, id, user]);
+  }, [fetchBlog, fetchComments, id, userId]);
 
   const handleLike = async () => {
     if (!user) { navigate('/login'); return; }
