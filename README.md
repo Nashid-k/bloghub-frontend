@@ -1,75 +1,53 @@
-# BlogHub Frontend – React.js Blogging Platform
+# BlogHub — React Blogging Frontend
 
-A modern, responsive blogging frontend built with **React.js**, featuring **JWT authentication**, blog CRUD, and profile management.
+A React single-page application for BlogHub, with JWT-based authentication, blog management and user-profile screens. The app uses Vite for development and production builds.
 
-## 🚀 Features
+## Features
 
-* **Auth**: Register, Login, Logout, Protected Routes
-* **Blogs**: View, Create, Edit, Delete (author-only)
-* **Profile**: View & update profile, manage own posts
-* **UI/UX**: Responsive design, form validation, loading & error states
+- Register, login and logout flows
+- Browse and view blog posts
+- Create, edit and delete blog posts
+- Profile view and user-owned post management
+- Axios API client with bearer-token attachment
+- Responsive page and reusable component structure
 
-## 🛠 Tech Stack
+## Stack
 
-* React 18, React Router DOM, Context API
-* Axios, JWT (localStorage)
-* CSS/SCSS, React Hooks
+- React 19
+- Vite 7
+- React Router 7
+- Axios
+- Context API and React hooks
 
-## 📁 Structure
-
-```
-src/
- ├── components/   # Navbar, BlogCard, BlogForm
- ├── pages/        # Home, Login, Register, Profile, Blog CRUD
- ├── context/      # AuthContext
- ├── services/     # api.js
- ├── App.jsx / index.jsx
-```
-
-## ⚡ Quick Start
+## Run locally
 
 ```bash
 git clone https://github.com/Nashid-k/bloghub-frontend.git
-cd bloghub-frontend
+cd bloghub-frontend/client
 npm install
+cp .env.example .env
+npm run dev
 ```
 
-Add `.env`:
+Open the Vite URL printed in the terminal (normally [http://localhost:5173](http://localhost:5173)).
 
-```
-REACT_APP_API_URL=http://localhost:5000/api
-```
+## Environment
 
-Run:
+`VITE_API_URL` is the backend origin without the `/api` suffix.
 
-```bash
-npm start
+```env
+VITE_API_URL=http://localhost:5000
 ```
 
-## 🔗 API Integration
+Vite exposes `VITE_*` values to browser code. Never place private credentials in these variables.
 
-* **Auth**: `/api/auth/register`, `/api/auth/login`, `/api/auth/logout`
-* **Blogs**: `/api/blogs`, `/api/blogs/:id` (CRUD, auth required)
-* **User**: `/api/users/me`
+## Scripts
 
-## 📦 Dependencies
+- `npm run dev` — start Vite
+- `npm run build` — create production build
+- `npm run preview` — preview the production build
+- `npm run lint` — run ESLint
 
-* Core: `react`, `react-router-dom`, `axios`
-* Dev: `react-scripts`, `@testing-library/react`
+## Related repository
 
-## 🧪 Scripts
-
-* `npm start` – Dev server
-* `npm run build` – Production build
-* `npm test` – Test suite
-
-## 👨‍💻 Author
-
-**Nashid K**
-
-* GitHub: [@Nashid-k](https://github.com/Nashid-k)
-* Email: [nashidk1999@gmail.com](mailto:nashidk1999@gmail.com)
-* LinkedIn: [Nashid K](https://www.linkedin.com/in/nashid-k-080909273/)
-
----
-
+[BlogHub backend](https://github.com/Nashid-k/bloghub-backend)
