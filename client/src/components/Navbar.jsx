@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
+import NotificationBell from './NotificationBell';
 
 const Navbar = () => {
   const { user, logout, loading } = useAuth();
@@ -25,6 +26,7 @@ const Navbar = () => {
         <div className={`nav-menu ${menuOpen ? 'nav-menu-open' : ''}`} id="primary-navigation">
           <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`} onClick={closeMenu}>Discover</NavLink>
           {user && <NavLink to="/profile" className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`} onClick={closeMenu}>My stories</NavLink>}
+          {user && <NotificationBell />}
           <span className="nav-divider" />
           {!loading && (user ? (
             <>
