@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import BlogForm from '../components/BlogForm';
 import { blogAPI } from '../services/api';
@@ -16,7 +16,7 @@ const EditBlog = () => {
     fetchBlog();
   }, [id]);
 
-  const fetchBlog = async () => {
+  const fetchBlog = useCallback(async () => {
     try {
       const response = await blogAPI.getBlog(id);
       const blogData = response.data;
@@ -28,7 +28,7 @@ const EditBlog = () => {
       }
       
       setBlog(blogData);
-    } catch (error) {
+    } catch {
       alert('Error fetching blog');
       navigate('/');
     } finally {
