@@ -25,6 +25,7 @@ export const blogAPI = {
   createBlog: (blogData) => api.post('/blogs', blogData),
   updateBlog: (id, blogData) => api.put(`/blogs/${id}`, blogData),
   deleteBlog: (id) => api.delete(`/blogs/${id}`),
+  getEngagement: (id) => api.get(`/blogs/${id}/engagement`),
   toggleLike: (id) => api.post(`/blogs/${id}/like`),
   toggleBookmark: (id) => api.post(`/blogs/${id}/bookmark`),
   getComments: (id) => api.get(`/blogs/${id}/comments`),
