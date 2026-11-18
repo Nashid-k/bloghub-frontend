@@ -25,7 +25,12 @@ export const blogAPI = {
   createBlog: (blogData) => api.post('/blogs', blogData),
   updateBlog: (id, blogData) => api.put(`/blogs/${id}`, blogData),
   deleteBlog: (id) => api.delete(`/blogs/${id}`),
+  toggleLike: (id) => api.post(`/blogs/${id}/like`),
+  toggleBookmark: (id) => api.post(`/blogs/${id}/bookmark`),
+  getComments: (id) => api.get(`/blogs/${id}/comments`),
+  createComment: (id, content) => api.post(`/blogs/${id}/comments`, { content }),
+  deleteComment: (commentId) => api.delete(`/blogs/comments/${commentId}`),
 };
 
-export const userAPI = { getProfile: () => api.get('/users/me') };
+export const userAPI = { getProfile: () => api.get('/users/me'), getBookmarks: () => api.get('/users/bookmarks') };
 export default api;
