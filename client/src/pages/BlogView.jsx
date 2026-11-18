@@ -33,10 +33,10 @@ const BlogView = () => {
     <header className="blog-header"><span className="eyebrow"><span className="eyebrow-dot" /> FROM THE BLOGHUB COMMUNITY</span><h1>{blog.title}</h1>
       {blog.excerpt && <p className="blog-intro">{blog.excerpt}</p>}
       <div className="blog-meta"><span>By <strong>{blog.author?.name || 'BlogHub writer'}</strong></span>{publishedDate && <span>Published {new Date(publishedDate).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</span>}</div>
-      <div className="blog-reading-meta"><span>{blog.readingTime || 1} min read</span><span>{(blog.content || '').trim().split(/\\s+/).filter(Boolean).length} words</span></div>
+      <div className="blog-reading-meta"><span>{blog.readingTime || 1} min read</span><span>{(blog.content || '').trim().split(/\s+/).filter(Boolean).length} words</span></div>
       {!!blog.tags?.length && <div className="blog-tags">{blog.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
     </header>
-    <div className="blog-content">{String(blog.content || '').split(/\\n{2,}/).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
+    <div className="blog-content">{String(blog.content || '').split(/\n{2,}/).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
     {isAuthor && <div className="blog-actions"><Link to={`/edit/${blog._id}`} className="button btn-secondary">Edit story</Link><button type="button" onClick={handleDelete} className="button btn-danger">Delete story</button></div>}
   </article><div className="blog-navigation"><Link to="/" className="button button-outline">← Back to Discover</Link></div></div>;
 };
