@@ -27,7 +27,7 @@ const Home = () => {
   useEffect(() => {
     const timeout = window.setTimeout(() => { setPage(1); fetchBlogs(1, query); }, 250);
     return () => window.clearTimeout(timeout);
-  }, [query]);
+  }, [query, fetchBlogs]);
 
   const featuredBlog = blogs[0];
   const remainingBlogs = blogs.slice(1);
