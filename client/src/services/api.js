@@ -4,16 +4,10 @@ const API_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
   : '/api';
 
-const api = axios.create({
-  baseURL: API_URL,
-});
-
-// Add token to requests
+const api = axios.create({ baseURL: API_URL });
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
@@ -24,15 +18,14 @@ export const authAPI = {
 };
 
 export const blogAPI = {
-  getAllBlogs: () => api.get('/blogs'),
+  getAllBlogs: (params = {}) => api.get('/blogs', { params }),
   getBlog: (id) => api.get(`/blogs/${id}`),
+  getMyBlogs: () => api.get('/blogs/mine'),
+  getMyBlog: (id) => api.get(`/blogs/mine/${id}`),
   createBlog: (blogData) => api.post('/blogs', blogData),
   updateBlog: (id, blogData) => api.put(`/blogs/${id}`, blogData),
   deleteBlog: (id) => api.delete(`/blogs/${id}`),
 };
 
-export const userAPI = {
-  getProfile: () => api.get('/users/me'),
-};
-
+export const userAPI = { getProfile: () => api.get('/users/me') };
 export default api;
