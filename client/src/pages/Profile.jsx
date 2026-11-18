@@ -18,8 +18,8 @@ const Profile = () => {
     try {
       const response = await userAPI.getProfile();
       setUserBlogs(response.data.blogs);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
+    } catch {
+      setUserBlogs([]);
     } finally {
       setLoading(false);
     }
