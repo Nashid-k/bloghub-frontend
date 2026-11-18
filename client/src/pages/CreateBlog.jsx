@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BlogForm from '../components/BlogForm';
 import { blogAPI } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 const CreateBlog = () => {
   const [loading, setLoading] = useState(false);
