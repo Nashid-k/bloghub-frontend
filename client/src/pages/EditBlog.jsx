@@ -8,55 +8,35 @@ const EditBlog = () => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(true);
+  const [error, setError] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const fetchBlog = useCallback(async () => {
     try {
-      const response = await blogAPI.getBlog(id);
-      const blogData = response.data;
-      const authorId = blogData.author?._id || blogData.author?.id;
-
-      if (!user || authorId !== user.id) {
-        navigate('/');
-        return;
-      }
-      setBlog(blogData);
-    } catch {
-      window.alert('This story could not be loaded.');
-      navigate('/');
-    } finally {
-      setFetchLoading(false);
-    }
+      const response = await blogAPI.getMyBlog(id);
+      const authorId = response.data.author?._id || response.data.author?.id || response.data.author;
+      if (!user || authorId.toString() !== user.id.toString()) { navigate('/'); return; }
+      setBlog(response.data);
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || 'This story could not be loaded.');
+    } finally { setFetchLoading(false); }
   }, [id, navigate, user]);
 
-  useEffect(() => {
-    fetchBlog();
-  }, [fetchBlog]);
-
+  useEffect(() => { if (user) fetchBlog(); }, [fetchBlog, user]);
   const handleSubmit = async (formData) => {
-    setLoading(true);
+    setLoading(true); setError('');
     try {
-      await blogAPI.updateBlog(id, formData);
-      navigate(`/blog/${id}`);
-    } catch (error) {
-      window.alert(error.response?.data?.error || 'Could not update this story.');
-    } finally {
-      setLoading(false);
-    }
+      const response = await blogAPI.updateBlog(id, formData);
+      navigate(response.data.status === 'published' ? `/blog/${id}` : '/profile');
+    } catch (requestError) {
+      setError(requestError.response?.data?.error || 'Could not save this story.');
+    } finally { setLoading(false); }
   };
 
-  if (fetchLoading) return <div className="loading" role="status">Loading story…</div>;
-  if (!blog) return null;
-
-  return (
-    <div className="edit-blog">
-      <span className="eyebrow">YOUR WRITING SPACE</span>
-      <h1>Edit your story</h1>
-      <BlogForm initialData={blog} onSubmit={handleSubmit} loading={loading} />
-    </div>
-  );
+  if (fetchLoading) return <div className="loading" role="status">Loading your story…</div>;
+  if (!blog) return <div className="feed-state feed-error" role="alert"><strong>Story unavailable</strong><p>{error}</p><button className="button button-outline" onClick={() => navigate('/profile')}>Back to your stories</button></div>;
+  return <div className="edit-blog"><span className="eyebrow">YOUR WRITING SPACE</span><h1>Keep shaping the story.</h1>{error && <p className="error" role="alert">{error}</p>}<BlogForm initialData={blog} onSubmit={handleSubmit} loading={loading} /></div>;
 };
-
 export default EditBlog;

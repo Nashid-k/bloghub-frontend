@@ -2,7 +2,7 @@
 
 **Product direction:** a reader-first publishing platform with a serious creator workflow and trustworthy community controls.
 
-**Current baseline:** React 19 + Vite 7 frontend; Express 5 + MongoDB/Mongoose API; JWT authentication; user-owned blog CRUD. The current data model has users (name/email/password) and posts (title/content/author), with auth, blogs and current-user profile routes.
+**Current implementation branch:** React 19 + Vite 7 frontend; Express 5 + MongoDB/Mongoose API; JWT authentication; editorial publishing workflow; private drafts; server-side search/pagination; persistent likes, bookmarks and comments. The `feature/bloghub-publishing-studio` branch contains the combined publishing and reader-engagement release awaiting review; main remains the last merged release until the PR is merged.
 
 **Target:** evolve the foundation through small, testable releases. This roadmap describes intended work, not functionality that already exists.
 
@@ -46,11 +46,11 @@
 
 ## Delivery plan
 
-### Phase 0 — Foundation and visual system (current milestone)
+### Phase 0 — Foundation and visual system (completed in prior release)
 **Goal:** replace the generic CRUD presentation without breaking the existing API.
 - Establish typography, color, spacing, surfaces, responsive breakpoints and focus states
 - Redesign global navigation, home feed, story cards, article page and auth/editor shells
-- Add client-side search over stories returned by the existing API
+- Add editorial discovery with server-side search and pagination
 - Improve loading, empty, error and destructive-action states
 - Add product metadata, favicon and page titles
 - Preserve current endpoint contract and author-only edit/delete behavior
@@ -59,24 +59,40 @@
 
 ### Phase 1 — Publishing core
 **Goal:** make creating and maintaining articles reliable.
-- Add post fields: title, slug, excerpt, body, cover image metadata, tags, status, publishedAt, readingTime and SEO fields
-- Draft and publish workflow with server-side ownership checks
-- Autosave with explicit save state and conflict-safe updates
-- Markdown or structured rich-text content with safe rendering/sanitization
-- Server-side pagination, sorting and search
-- Slug-based public article URLs with stable ID fallback
-- Tests for validation, ownership, status transitions and pagination
 
-**Acceptance:** authors can create, save, preview, publish, edit and unpublish; readers only see published content.
+**Delivered in the publishing-studio milestone:**
+- Post fields for slug, excerpt, tags, status, publishedAt and readingTime
+- Draft/publish workflow with authenticated author-only draft access and ownership checks
+- Writing studio with preview, excerpt and topic entry, reading-time estimate, and explicit save/publish actions
+- Server-side bounded pagination and escaped search across title, excerpt, body and tags
+- Creator library with all/published/draft filters and real counts
+- Article metadata and improved reading layout
+- Validation coverage for status and editorial metadata
+
+**Still outstanding in Phase 1:**
+- Reliable autosave with conflict-safe updates and visible save state
+- Rich-text or Markdown authoring with safe rendering/sanitization
+- Cover image upload/storage, SEO metadata and canonical slug-based public URLs
+- Database-backed integration tests for ownership, status transitions and pagination
+
+**Acceptance:** authors can create, save, preview, publish, edit and unpublish; readers only see published content. The current milestone delivers the core workflow; remaining items stay explicitly in progress.
 
 ### Phase 2 — Discovery and reader engagement
-- Topics/tags and topic landing pages
-- Bookmarks and reading lists
-- Likes/reactions with uniqueness constraints
-- Comments with moderation and pagination
-- Follow/unfollow authors
-- Search indexing strategy and query limits
-- Personalized feed based on followed authors and topics
+
+**Delivered in the reader-engagement slice (on the open feature PR):**
+- Persistent likes with set-based deduplication and server-calculated counts
+- Personal bookmarks with a saved-reading-list endpoint and creator-dashboard display
+- Persistent article comments with authenticated creation
+- Comment removal limited to the comment author or story author
+- Public story payloads expose reaction counts, not arrays of reader IDs
+- Responsive article engagement controls and discussion UI
+
+**Still outstanding:**
+- Topic landing pages and tag browsing
+- Comment pagination, reporting, moderation queue and rate limits
+- Follow/unfollow authors and personalized feed
+- Search indexing strategy for larger datasets
+- Database-backed integration tests for engagement permissions and concurrency
 
 **Acceptance:** engagement is persisted, authenticated where required, deduplicated and covered by API tests.
 

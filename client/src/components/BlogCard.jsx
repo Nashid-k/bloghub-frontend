@@ -29,7 +29,7 @@ const BlogCard = ({ blog, onDelete, featured = false }) => {
   };
 
   const authorName = blog.author?.name || 'BlogHub writer';
-  const publishedDate = blog.createdAt
+  const publishedDate = (blog.publishedAt || blog.createdAt)
     ? new Date(blog.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
     : 'Recently';
 
@@ -39,7 +39,7 @@ const BlogCard = ({ blog, onDelete, featured = false }) => {
       <div className="story-card-body">
         <div className="story-card-kicker"><span className="kicker-dot" /> {featured ? 'A STORY TO START WITH' : 'COMMUNITY STORY'}</div>
         <h3><Link to={`/blog/${blog._id}`}>{blog.title}</Link></h3>
-        <p className="story-excerpt">{getExcerpt(blog.content, featured ? 300 : 165)}</p>
+        <p className="story-excerpt">{getExcerpt(blog.excerpt || blog.content, featured ? 300 : 165)}</p>
         <div className="story-card-footer">
           <div className="story-author"><span className="author-avatar">{authorName.charAt(0).toUpperCase()}</span><span><strong>{authorName}</strong><small>{publishedDate}</small></span></div>
           <Link to={`/blog/${blog._id}`} className="story-read-link" aria-label={`Read ${blog.title}`}>Read story <span aria-hidden="true">↗</span></Link>
