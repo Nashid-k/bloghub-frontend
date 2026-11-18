@@ -9,7 +9,7 @@ const BlogForm = ({ initialData, onSubmit, loading }) => {
     status: initialData?.status || 'draft',
   });
   const [preview, setPreview] = useState(false);
-  const words = useMemo(() => formData.content.trim().split(/\\s+/).filter(Boolean).length, [formData.content]);
+  const words = useMemo(() => formData.content.trim().split(/\s+/).filter(Boolean).length, [formData.content]);
   const readingTime = Math.max(1, Math.ceil(words / 220));
   const update = (event) => setFormData((current) => ({ ...current, [event.target.name]: event.target.value }));
   const submit = (event) => {
@@ -47,7 +47,7 @@ const BlogForm = ({ initialData, onSubmit, loading }) => {
         <div className="writing-preview" aria-live="polite">
           <h2>{formData.title || 'Your story title'}</h2>
           {formData.excerpt && <p className="preview-excerpt">{formData.excerpt}</p>}
-          {formData.content.split(/\\n{2,}/).filter(Boolean).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+          {formData.content.split(/\n{2,}/).filter(Boolean).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
         </div>
       ) : (
         <textarea id="content" name="content" value={formData.content} onChange={update} required minLength="1" maxLength="50000" rows="18" placeholder="Start with the idea you can't stop thinking about…" />
