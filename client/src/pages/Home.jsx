@@ -21,9 +21,7 @@ const Home = () => {
     } catch (requestError) {
       setError(requestError.response?.data?.error || 'We could not load stories right now. Please try again.');
     } finally { setLoading(false); }
-  };
-
-  useEffect(() => { fetchBlogs(1, ''); }, []);
+  }, []);
   useEffect(() => {
     const timeout = window.setTimeout(() => { setPage(1); fetchBlogs(1, query); }, 250);
     return () => window.clearTimeout(timeout);
