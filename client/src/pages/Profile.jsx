@@ -29,7 +29,7 @@ const Profile = () => {
     if (window.confirm('Are you sure you want to delete this blog?')) {
       try {
         await blogAPI.deleteBlog(blogId);
-        setUserBlogs(userBlogs.filter(blog => blog._id !== blogId));
+        setUserBlogs((currentBlogs) => currentBlogs.filter((blog) => blog._id !== blogId));
       } catch (error) {
         alert('Error deleting blog');
       }
