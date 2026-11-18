@@ -1,6 +1,6 @@
 # BlogHub — Editorial Publishing Frontend
 
-A React 19 + Vite frontend for BlogHub, a publishing platform in active evolution. The current application supports account registration/login, story discovery, reading, author-owned story CRUD and profile views. The editorial UI refresh is being developed on the `feature/bloghub-product-evolution` branch.
+A React 19 + Vite frontend for BlogHub, a publishing platform in active evolution. The current application supports account registration/login, story discovery, reading, author-owned story CRUD and profile views. The editorial UI, creator studio, reader engagement and notification inbox are developed on the `feature/bloghub-publishing-studio` branch.
 
 ## Current experience
 
@@ -14,6 +14,7 @@ A React 19 + Vite frontend for BlogHub, a publishing platform in active evolutio
 - Registration, login, create/edit story and creator profile routes
 - Drafts are private to their author; the public feed only returns published stories
 - Loading, empty and error states for the home feed
+- Notification bell with unread count, follower/comment/like/bookmark activity, cursor pagination and read-state controls
 
 ## Stack
 
