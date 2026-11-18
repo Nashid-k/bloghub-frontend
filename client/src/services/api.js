@@ -33,5 +33,12 @@ export const blogAPI = {
   deleteComment: (commentId) => api.delete(`/blogs/comments/${commentId}`),
 };
 
-export const userAPI = { getProfile: () => api.get('/users/me'), getBookmarks: () => api.get('/users/bookmarks') };
+export const userAPI = {
+  getProfile: () => api.get('/users/me'),
+  getBookmarks: () => api.get('/users/bookmarks'),
+  getNotifications: (params = {}) => api.get('/users/notifications', { params }),
+  getUnreadNotificationCount: () => api.get('/users/notifications/unread-count'),
+  markNotificationRead: (notificationId) => api.patch(`/users/notifications/${notificationId}/read`),
+  markAllNotificationsRead: () => api.patch('/users/notifications/read-all'),
+};
 export default api;
