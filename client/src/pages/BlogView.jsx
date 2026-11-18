@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { blogAPI, userAPI } from '../services/api';
+import { blogAPI } from '../services/api';
 import { useAuth } from '../context/useAuth';
 
 const BlogView = () => {
@@ -40,8 +40,8 @@ const BlogView = () => {
 
   useEffect(() => {
     fetchBlog(); fetchComments();
-    if (user) userAPI.getBookmarks().then((response) => setBookmarked((response.data || []).some((story) => String(story._id) === String(id)))).catch(() => {});
-    else setBookmarked(false);
+    if (user) blogAPI.getEngagement(id).then((response) => { setLiked(response.data.liked); setBookmarked(response.data.bookmarked); }).catch(() => {});
+    else { setLiked(false); setBookmarked(false); }
   }, [fetchBlog, fetchComments, id, userId]);
 
   const handleLike = async () => {
