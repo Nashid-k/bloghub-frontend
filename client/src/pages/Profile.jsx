@@ -13,12 +13,13 @@ const Profile = () => {
 
   useEffect(() => {
     let active = true;
+    if (!user) { setLoading(false); return () => { active = false; }; }
     Promise.all([userAPI.getProfile(), userAPI.getBookmarks()]).then(([profileResponse, bookmarkResponse]) => {
       if (active) { setUserBlogs(profileResponse.data.blogs || []); setBookmarks(bookmarkResponse.data || []); }
     }).catch(() => { if (active) setError('Some creator data could not be loaded.'); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, []);
+  }, [user]);
 
   const handleDeleteBlog = async (blogId) => {
     if (!window.confirm('Delete this story permanently?')) return;
