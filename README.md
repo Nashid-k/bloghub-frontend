@@ -7,8 +7,12 @@ A React 19 + Vite frontend for BlogHub, a publishing platform in active evolutio
 - Editorial landing page with story search across the currently loaded feed
 - Responsive navigation and mobile menu
 - Story cards with author/date metadata and author-only edit/delete actions
+- Server-side paginated discovery and search
+- Creator studio with draft/published filters, metadata editing and article preview
+- Article excerpts, topic tags and reading-time metadata
 - Article reading view
-- Registration, login, create/edit story and profile routes
+- Registration, login, create/edit story and creator profile routes
+- Drafts are private to their author; the public feed only returns published stories
 - Loading, empty and error states for the home feed
 
 ## Stack
