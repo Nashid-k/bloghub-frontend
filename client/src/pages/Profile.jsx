@@ -30,7 +30,7 @@ const Profile = () => {
       try {
         await blogAPI.deleteBlog(blogId);
         setUserBlogs((currentBlogs) => currentBlogs.filter((blog) => blog._id !== blogId));
-      } catch (error) {
+      } catch {
         alert('Error deleting blog');
       }
     }
