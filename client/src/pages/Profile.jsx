@@ -5,6 +5,7 @@ import { useAuth } from '../context/useAuth';
 
 const Profile = () => {
   const [userBlogs, setUserBlogs] = useState([]);
+  const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [error, setError] = useState('');
@@ -12,8 +13,9 @@ const Profile = () => {
 
   useEffect(() => {
     let active = true;
-    userAPI.getProfile().then((response) => { if (active) setUserBlogs(response.data.blogs || []); })
-      .catch(() => { if (active) setError('Your writing could not be loaded.'); })
+    Promise.all([userAPI.getProfile(), userAPI.getBookmarks()]).then(([profileResponse, bookmarkResponse]) => {
+      if (active) { setUserBlogs(profileResponse.data.blogs || []); setBookmarks(bookmarkResponse.data || []); }
+    }).catch(() => { if (active) setError('Some creator data could not be loaded.'); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
@@ -36,6 +38,7 @@ const Profile = () => {
     <section className="user-blogs"><div className="creator-list-heading"><div><span className="eyebrow">YOUR LIBRARY</span><h2>Your stories</h2></div><div className="creator-filters" aria-label="Filter stories"><button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All</button><button className={filter === 'published' ? 'active' : ''} onClick={() => setFilter('published')}>Published</button><button className={filter === 'draft' ? 'active' : ''} onClick={() => setFilter('draft')}>Drafts</button></div></div>
       {visibleBlogs.length === 0 ? <div className="feed-state"><strong>{filter === 'draft' ? 'No drafts yet.' : 'Nothing here just yet.'}</strong><p>Start with a thought and turn it into a story.</p><Link to="/create" className="button button-dark">Create a story ↗</Link></div> : <div className="blogs-list">{visibleBlogs.map((blog) => <article key={blog._id} className="blog-item creator-story-row"><div className="creator-story-copy"><span className={blog.status === 'draft' ? 'status-pill status-draft' : 'status-pill status-published'}>{blog.status || 'published'}</span><h3>{blog.title}</h3><p className="blog-preview">{blog.excerpt || blog.content.substring(0, 150)}{blog.content.length > 150 ? '…' : ''}</p><div className="blog-meta"><span>Updated {new Date(blog.updatedAt || blog.createdAt).toLocaleDateString()}</span><span>{blog.readingTime || 1} min read</span></div></div><div className="blog-actions"><Link to={blog.status === 'draft' ? `/edit/${blog._id}` : `/blog/${blog._id}`} className="button btn-secondary">{blog.status === 'draft' ? 'Continue' : 'Read'}</Link><Link to={`/edit/${blog._id}`} className="button button-outline">Edit</Link><button onClick={() => handleDeleteBlog(blog._id)} className="button btn-danger">Delete</button></div></article>)}</div>}
     </section>
+    <section className="saved-reading-list"><div className="creator-list-heading"><div><span className="eyebrow">YOUR READING LIST</span><h2>Saved for later</h2></div><span className="saved-count">{bookmarks.length} saved</span></div>{bookmarks.length === 0 ? <p className="discussion-empty">Stories you bookmark will be waiting here when you return.</p> : <div className="saved-story-grid">{bookmarks.map((story) => <article className="saved-story-card" key={story._id}><span className="eyebrow">{story.author?.name || 'BlogHub writer'}</span><h3>{story.title}</h3><p>{story.excerpt || story.content?.slice(0, 130)}</p><Link to={'/blog/' + story._id}>Continue reading →</Link></article>)}</div>}</section>
   </div>;
 };
 export default Profile;
