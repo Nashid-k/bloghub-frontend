@@ -59,15 +59,23 @@
 
 ### Phase 1 — Publishing core
 **Goal:** make creating and maintaining articles reliable.
-- Add post fields: title, slug, excerpt, body, cover image metadata, tags, status, publishedAt, readingTime and SEO fields
-- Draft and publish workflow with server-side ownership checks
-- Autosave with explicit save state and conflict-safe updates
-- Markdown or structured rich-text content with safe rendering/sanitization
-- Server-side pagination, sorting and search
-- Slug-based public article URLs with stable ID fallback
-- Tests for validation, ownership, status transitions and pagination
 
-**Acceptance:** authors can create, save, preview, publish, edit and unpublish; readers only see published content.
+**Delivered in the publishing-studio milestone:**
+- Post fields for slug, excerpt, tags, status, publishedAt and readingTime
+- Draft/publish workflow with authenticated author-only draft access and ownership checks
+- Writing studio with preview, excerpt and topic entry, reading-time estimate, and explicit save/publish actions
+- Server-side bounded pagination and escaped search across title, excerpt, body and tags
+- Creator library with all/published/draft filters and real counts
+- Article metadata and improved reading layout
+- Validation coverage for status and editorial metadata
+
+**Still outstanding in Phase 1:**
+- Reliable autosave with conflict-safe updates and visible save state
+- Rich-text or Markdown authoring with safe rendering/sanitization
+- Cover image upload/storage, SEO metadata and canonical slug-based public URLs
+- Database-backed integration tests for ownership, status transitions and pagination
+
+**Acceptance:** authors can create, save, preview, publish, edit and unpublish; readers only see published content. The current milestone delivers the core workflow; remaining items stay explicitly in progress.
 
 ### Phase 2 — Discovery and reader engagement
 - Topics/tags and topic landing pages
